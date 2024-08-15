@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> promises </title>
+</head>
+<body>
+
+</body>
+    <script>
+        
+        function promiseOne(){
+            let myPromise = new Promise((resolve,reject)=>{
+                let connectionStatus = true;
+                
+                if(connectionStatus){
+                    // resolve this is the message that will show in the (THEN)
+                    resolve("Connection Successfully");
+                }else{
+                    reject(Error("Connection Error"));
+                }
+            });
+
+            // let resolveResult = (resolve) => console.log(`Corrected Work!: ${resolve}`);
+            // let rejectResult = (reject) => console.log(`Not Corrected Work!: ${reject}`);
+
+            // This is the corrected version as a comparing with last version:
+
+            let resolveResult = (resolve) => console.log(resolve);
+            let rejectResult = (reject) => console.log(reject);
+            
+            // Then used to handling the promises!
+            // myPromise.then(resolveResult , rejectResult);
+            
+            // another version corrected as a comparing with last version
+            myPromise.then(resolveResult);
+            myPromise.catch(rejectResult);
+        }
+
+        function promiseTwo(){
+
+            // In the promise process will implementing (then) firstly then will translate into main promise to given final result!
+
+            let myPromise = new Promise((resolve,reject)=>{
+                let arrFriends = ["Ahmed","Moath","Sakher","Yazzed"];
+            
+                if(arrFriends.length == 4){
+                    resolve(arrFriends);
+                
+                }else{
+                    reject(Error('Number of employees are not enough'));
+                }
+            
+            }).then((resolve)=>{
+                resolve.length = 2;
+                return resolve; // This line to send promise to the next [then]
+            
+            }).then((resolve)=>{
+                resolve.length = 1;
+                return resolve;
+            
+            }).catch((rejected) => {
+                // once we facing an error.
+                console.log(rejected)
+            })
+          
+        }
+
+        function promiseThree(){
+            // By using promise you can do  any code implementation
+            let APILink = "https://api.github.com/users/ahmedaldrabea/repos";
+
+            let getData = (api) => {
+                return new Promise((resolve,reject) => {
+                    
+                    // API Preparing
+                    let request = new XMLHttpRequest();
+                    request.open("GET",api);
+                    
+                    // onreadystatechange : Same as onload 
+                    request.onload = function(){
+                        if(request.readyState == 4 && request.status == 200){
+                            
+                            // When you want to know readyState for what , see your telegram!
+                            let data = JSON.parse(request.responseText);
+                            resolve(data);
+                        
+                        }else{
+                            reject(Error("Server Error!"))
+                        }
+                    };
+
+                    request.send();
+                })
+            }
+        
+            getData(APILink)
+            .then((resolve) => {
+                // you needed to provide return value to provide data accessed into next then.
+                return resolve;
+            }).then((resolve) => {
+                console.log(resolve[0])
+            }).catch((error) => {
+                // error -> reject
+                console.log(error)
+            })
+        }
+        
+        function promiseFour(){
+            // When working with APIs using promises, it's recommended to use modern technologies like fetch, axios, or even Ajax.
+            
+            let APILink = "https://api.github.com/users/ahmedaldrabea/repos";
+
+            fetch(APILink)
+            .then((responseHandling)=>{
+                return responseHandling.json();
+            }).then((data) =>{
+                console.log(data[0])
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+
+        function asyncAwaitEXOne(){
+            // fulfillment it be the same of resolve
+            // async it will be another way for promise where provide what you need in clean way
+
+            async function getResult(){
+                let names = ["Ahmed","Osama","Mohammed"];
+                if(names.length > 0){
+                    return "Good Work!"
+                }else{
+                    throw new Error("Sorry , your array is lot compatible!");
+                }
+            }
+            
+            // then can handling resolve and reject at the same time .
+            
+            getResult().then (
+                (resolve) => { console.log(resolve) },
+                (reject)  => { console.log(reject) }
+            )
+
+        }
+
+        function awaitExample(){
+            // const is most useful for promises and another object's
+            
+            const resultOFPromise = new Promise((fulfillment,reject) => {
+                let answer = true ;
+                
+                if(answer){
+                    fulfillment("The operations are completed!")
+                }else
+                    reject(Error("The operations are not completed!"))
+            })
+
+            async function showData() {
+                console.log("... Your Code ... ");
+                // await it will not skip this section / line of code where it will waiting even completing the current section of code 
+            
+                try{
+                    console.log(await resultOFPromise)
+                }catch (error){
+                    console.log(error);
+                } finally{
+                    console.log("... Your Code ... ");
+                }
+            }
+
+            showData()
+        }
+
+    </script>
+</html>
